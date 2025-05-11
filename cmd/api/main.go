@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"time"
 	"ws_practice_1/internal/auth"
 	"ws_practice_1/internal/db"
@@ -12,8 +13,12 @@ import (
 )
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 	cfg := config{
-		addr: env.GetString("PORT", "0.0.0.0:8080"),
+		addr: port,
 		db: dbConfig{
 			dbUser:       env.GetString("DB_USER", "admin"),
 			dbPassword:   env.GetString("DB_PASSWORD", "adminpassword"),
