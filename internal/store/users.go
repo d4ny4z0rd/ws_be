@@ -6,8 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -15,29 +13,8 @@ var (
 	ErrDuplicateUsername = errors.New("a user with the username already exists")
 )
 
-type password struct {
-	text *string
-	hash []byte
-}
-
 type UserStore struct {
 	db *sql.DB
-}
-
-func (p *password) Set(text string) error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(text), bcrypt.DefaultCost)
-	if err != nil {
-		return nil
-	}
-
-	p.text = &text
-	p.hash = hash
-
-	return nil
-}
-
-func (p *password) GetHash() []byte {
-	return p.hash	
 }
 
 func (s *UserStore) create(ctx context.Context, tx *sql.Tx, user *User) error {
