@@ -3,21 +3,14 @@ package db
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"time"
+	"ws_practice_1/internal/env"
 
 	_ "github.com/lib/pq"
 )
 
 func New(dbUser, dbPassword, dbHost string, dbPort int, dbName, dbSSLMode string, maxOpenConns, maxIdleConns int, maxIdleTime string) (*sql.DB, error) {
-	connectionString := fmt.Sprintf("user=%s password=%s host=%s port=%d dbname=%s sslmode=%s",
-		dbUser,
-		dbPassword,
-		dbHost,
-		dbPort,
-		dbName,
-		dbSSLMode,
-	)
+	connectionString := env.GetString("DB_ADDR", "localhost:5432")
 
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
