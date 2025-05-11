@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 	"ws_practice_1/internal/auth"
@@ -12,8 +13,9 @@ import (
 )
 
 func main() {
+	port := env.GetString("PORT", "8080")
 	cfg := config{
-		addr: env.GetString("SERVER_ADDR", ":8080"),
+		addr: fmt.Sprintf("0.0.0.0:%s", port),
 		db: dbConfig{
 			dbUser:       env.GetString("DB_USER", "admin"),
 			dbPassword:   env.GetString("DB_PASSWORD", "adminpassword"),
