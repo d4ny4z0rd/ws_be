@@ -13,7 +13,7 @@ import (
 
 func main() {
 	cfg := config{
-		addr: env.GetString("PORT", ":8080"),
+		addr: env.GetString("PORT", "0.0.0.0:8080"),
 		db: dbConfig{
 			dbUser:       env.GetString("DB_USER", "admin"),
 			dbPassword:   env.GetString("DB_PASSWORD", "adminpassword"),
