@@ -3,8 +3,6 @@ package store
 import (
 	"context"
 	"database/sql"
-	"math/rand"
-	"time"
 )
 
 type QuestionStore struct {
@@ -47,7 +45,6 @@ func (s *QuestionStore) Create(ctx context.Context, q *DSAQuestion) error {
 }
 
 func (s *QuestionStore) GetRandomQuestion(ctx context.Context) (*DSAQuestion, error) {
-	rand.Seed(time.Now().UnixNano())
 
 	query := `
 		SELECT id, title, description, input_format, output_format, example_input, example_output

@@ -4,22 +4,16 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
-	"math/rand"
 	"net/http"
 	"strings"
 	"sync"
-	"time"
 	"ws_practice_1/internal/env"
 	"ws_practice_1/internal/store"
 
 	"github.com/gorilla/websocket"
 )
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -364,7 +358,7 @@ func sendToJudge(code string, langID int, stdin string) (submissionResponse, err
 	}
 	defer resp.Body.Close()
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	var result submissionResponse
 	json.Unmarshal(body, &result)
 
