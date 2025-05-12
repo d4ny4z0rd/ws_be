@@ -121,10 +121,10 @@ func (app *application) createTokenHandler(w http.ResponseWriter, r *http.Reques
 	http.SetCookie(w, &http.Cookie{
 		Name:     "jwt",
 		Value:    token,
-		HttpOnly: false, // allow reading from JS (dev only)
-		Secure:   false, // allow over HTTP (dev only)
 		Path:     "/",
-		SameSite: http.SameSiteLaxMode, // Lax or None for cross-origin
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode, // Required for cross-site cookies
 		Expires:  time.Now().Add(app.config.auth.token.exp),
 	})
 
@@ -135,12 +135,13 @@ func (app *application) logoutHandler(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "jwt",
 		Value:    "",
+		Path:     "/",
 		Expires:  time.Unix(0, 0),
 		MaxAge:   -1,
-		Path:     "/",
-		HttpOnly: false,
-		Secure:   false,
-		SameSite: http.SameSiteLaxMode,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
 	})
+
 	w.WriteHeader(http.StatusNoContent)
 }
