@@ -118,16 +118,23 @@ func (app *application) createTokenHandler(w http.ResponseWriter, r *http.Reques
 	// 	return
 	// }
 
+	// Change this part in your createTokenHandler function
 	http.SetCookie(w, &http.Cookie{
-		Name:     "jwt",
-		Value:    token,
-		Path:     "/",
+		Name:  "jwt",
+		Value: token,
+		Path:  "/",
+		// Add this line - explicitly setting the domain
+		Domain:   "", // Leave empty to use the host domain from the request
 		HttpOnly: true,
 		Secure:   true,
-		SameSite: http.SameSiteNoneMode, // Required for cross-site cookies
+		SameSite: http.SameSiteNoneMode,
 		Expires:  time.Now().Add(app.config.auth.token.exp),
 	})
 
+	// Add these response headers to ensure browsers handle the cookie correctly
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	// Make sure Set-Cookie is properly exposed
+	w.Header().Add("Access-Control-Expose-Headers", "Set-Cookie")
 	w.WriteHeader(http.StatusNoContent)
 }
 
