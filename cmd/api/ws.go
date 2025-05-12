@@ -33,8 +33,8 @@ type wsApp struct {
 	matchMaking MatchMaking
 	matches     map[*websocket.Conn]*Match
 	scores      map[*websocket.Conn]int
-	userConns   map[int64]*websocket.Conn // Map userID to connection (using int64 for user ID)
-	connUsers   map[*websocket.Conn]int64 // Map connection to userID
+	userConns   map[int64]*websocket.Conn
+	connUsers   map[*websocket.Conn]int64
 	mu          sync.Mutex
 	app         *application
 	userData    map[int64]*store.User
@@ -78,7 +78,6 @@ type submissionResponse struct {
 }
 
 func (app *application) wsHandler(w http.ResponseWriter, r *http.Request) {
-	//Check for the user value passed on from the middleware
 	user, ok := r.Context().Value(userCtx).(*store.User)
 	log.Println("User:", user)
 	if !ok {
@@ -88,7 +87,6 @@ func (app *application) wsHandler(w http.ResponseWriter, r *http.Request) {
 
 	println("hello")
 
-	// Upgrade the connection to a web-socket from http
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println("Upgrade error:", err)
@@ -97,7 +95,6 @@ func (app *application) wsHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("WebSocket connection established for user %d\n", user.ID)
 
-	// Lock the mutex
 	app.ws.mu.Lock()
 
 	if app.ws.userConns == nil {

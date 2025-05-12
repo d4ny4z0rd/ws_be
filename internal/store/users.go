@@ -146,7 +146,7 @@ func (s *UserStore) GetByEmail(ctx context.Context, email string) (*User, error)
 		&user.ID,
 		&user.Email,
 		&user.Username,
-		&user.Password, // Password will be directly scanned as []byte
+		&user.Password,
 		&user.Points,
 		&user.CreatedAt,
 		&user.UpdatedAt,

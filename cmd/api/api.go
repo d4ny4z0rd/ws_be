@@ -69,10 +69,8 @@ func (app *application) mount() *chi.Mux {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(cors.Handler(cors.Options{
-		// Update AllowedOrigins to include both HTTP and HTTPS versions if needed
-		AllowedOrigins: []string{"http://localhost:5173", "https://stupidcoder.vercel.app", "http://stupidcoder.vercel.app"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		// Add more headers that might be needed
+		AllowedOrigins:   []string{"http://localhost:5173", "https://stupidcoder.vercel.app", "http://stupidcoder.vercel.app"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "X-Requested-With"},
 		ExposedHeaders:   []string{"Set-Cookie", "Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"},
 		AllowCredentials: true,

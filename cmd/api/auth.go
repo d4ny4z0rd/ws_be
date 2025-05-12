@@ -28,23 +28,19 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	// Prepare the user struct without the password
 	user := &store.User{
 		Email:    payload.Email,
 		Username: payload.Username,
 	}
 
-	// Hash the password using bcrypt
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
 	if err != nil {
 		app.internalServerError(w, r, err)
 		return
 	}
 
-	// Store the hashed password in user.Password
 	user.Password = hashedPassword
 
-	// Create the user in the database
 	ctx := r.Context()
 	err = app.store.Users.Create(ctx, user)
 	if err != nil {
@@ -59,7 +55,6 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	// Return the created user as a response
 	if err := app.jsonResponse(w, http.StatusCreated, user); err != nil {
 		app.internalServerError(w, r, err)
 	}
@@ -112,30 +107,20 @@ func (app *application) createTokenHandler(w http.ResponseWriter, r *http.Reques
 		app.internalServerError(w, r, err)
 		return
 	}
-
-	// if err := app.jsonResponse(w, http.StatusCreated, token); err != nil {
-	// 	app.internalServerError(w, r, err)
-	// 	return
-	// }
-
-	// Change this part in your createTokenHandler function
-	// Set cookie as before
 	http.SetCookie(w, &http.Cookie{
 		Name:     "jwt",
 		Value:    token,
 		Path:     "/",
-		Domain:   "", // Leave blank to default to request host
+		Domain:   "",
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,
 		Expires:  time.Now().Add(app.config.auth.token.exp),
 	})
 
-	// Add headers
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	w.Header().Add("Access-Control-Expose-Headers", "Set-Cookie")
 
-	// ✅ Return token in JSON so frontend can store it in localStorage
 	response := map[string]string{
 		"token": token,
 	}
