@@ -119,23 +119,29 @@ func (app *application) createTokenHandler(w http.ResponseWriter, r *http.Reques
 	// }
 
 	// Change this part in your createTokenHandler function
+	// Set cookie as before
 	http.SetCookie(w, &http.Cookie{
-		Name:  "jwt",
-		Value: token,
-		Path:  "/",
-		// Add this line - explicitly setting the domain
-		Domain:   "", // Leave empty to use the host domain from the request
+		Name:     "jwt",
+		Value:    token,
+		Path:     "/",
+		Domain:   "", // Leave blank to default to request host
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,
 		Expires:  time.Now().Add(app.config.auth.token.exp),
 	})
 
-	// Add these response headers to ensure browsers handle the cookie correctly
+	// Add headers
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	// Make sure Set-Cookie is properly exposed
 	w.Header().Add("Access-Control-Expose-Headers", "Set-Cookie")
-	w.WriteHeader(http.StatusNoContent)
+
+	// ✅ Return token in JSON so frontend can store it in localStorage
+	response := map[string]string{
+		"token": token,
+	}
+	if err := app.jsonResponse(w, http.StatusOK, response); err != nil {
+		app.internalServerError(w, r, err)
+	}
 }
 
 func (app *application) logoutHandler(w http.ResponseWriter, r *http.Request) {

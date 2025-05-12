@@ -86,6 +86,8 @@ func (app *application) wsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	println("hello")
+
 	// Upgrade the connection to a web-socket from http
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
