@@ -99,9 +99,7 @@ func (app *application) mount() *chi.Mux {
 
 		})
 
-		r.Route("/ws", func(r chi.Router) {
-			r.With(app.ParamAuthTokenMiddleware).Get("/", app.wsHandler)
-		})
+		r.Get("/ws", app.wsHandler)
 
 		r.Route("/authentication", func(r chi.Router) {
 			r.Post("/create", app.registerUserHandler)
